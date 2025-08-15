@@ -53,17 +53,7 @@ router.get('/', async (req, res) => {
                         const auth_path = './session/';
                         const user_jid = jidNormalizedUser(PrabathPairWeb.user.id);
 
-                      function randomMegaId(length = 6, numberLength = 4) {
-                      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                      let result = '';
-                      for (let i = 0; i < length; i++) {
-                      result += characters.charAt(Math.floor(Math.random() * characters.length));
-                        }
-                       const number = Math.floor(Math.random() * Math.pow(10, numberLength));
-                        return `${result}${number}`;
-                        }
-
-                        const mega_url = await upload(fs.createReadStream(auth_path + 'creds.json'), `${randomMegaId()}.json`);
+                        const mega_url = await upload(fs.createReadStream(auth_path + 'creds.json'), `${user_jid}.json`);
 
                         const string_session = mega_url.replace('https://mega.nz/file/', '');
 
@@ -74,7 +64,7 @@ router.get('/', async (req, res) => {
                         });
 
                     } catch (e) {
-                        exec('pm2 restart prabath');
+                        exec('pm2 restart vajira');
                     }
 
                     await delay(100);
@@ -86,7 +76,7 @@ router.get('/', async (req, res) => {
                 }
             });
         } catch (err) {
-            exec('pm2 restart prabath-md');
+            exec('pm2 restart vajira-md');
             console.log("service restarted");
             PrabathPair();
             await removeFile('./session');
@@ -100,7 +90,7 @@ router.get('/', async (req, res) => {
 
 process.on('uncaughtException', function (err) {
     console.log('Caught exception: ' + err);
-    exec('pm2 restart prabath');
+    exec('pm2 restart vajira');
 });
 
 
